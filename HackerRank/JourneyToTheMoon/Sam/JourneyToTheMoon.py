@@ -1,7 +1,8 @@
 import itertools
-import unittest, collections
+import unittest
 from typing import List
 from collections import defaultdict
+from collections import deque
 
 
 def journey_to_the_moon(n: int, astronaut: List[List[int]]):
@@ -26,7 +27,7 @@ def journey_to_the_moon(n: int, astronaut: List[List[int]]):
     connected_components = {}
     component = 0
     for node, neighbors in enumerate(adj_list):
-        q = collections.deque()
+        q = deque()
         visited = set()
         q.append(node)
         while q:
@@ -38,15 +39,18 @@ def journey_to_the_moon(n: int, astronaut: List[List[int]]):
             q.extend(adj_list[current])
         component += 1
 
-    # We want a table that of the form |    cc: count
+    # Invert the list so we have a table of the form:
+    # cc1: count1
+    # cc2: count2
+    # ...
     connected_components = connected_components.items()
     cc_table = defaultdict(lambda: 0)
     for astro, cc in connected_components:
         cc_table[cc] += 1
     combos = itertools.combinations(cc_table.keys(), 2)
 
-
     # Calculate result
+    # Find each pair of connected components and add the product of their counts to the total solution count
     solution = 0
     for c in combos:
         solution += cc_table[c[0]] * cc_table[c[1]]
