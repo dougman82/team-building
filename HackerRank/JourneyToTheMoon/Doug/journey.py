@@ -17,17 +17,31 @@ def solve_naive(num_astronauts, pairs):
 		# Add astronauts to the lookup table, but only if we haven't already seen them
 		# Count astronauts as we go to determine how many singletons we need to add later
 		if left in lookup:
-			if right not in lookup:
+			# Make sure they are the same country - if not, merge them (into left's)
+			if right in lookup:
+				if lookup[left] != lookup[right]:
+					countries[lookup[left]] += countries[lookup[right]]
+					del countries[lookup[right]]
+					tmp = lookup[right]
+					for item in lookup:
+						if lookup[item] == tmp:
+							lookup[item] = lookup[left]
+
+			# Add right to left's country
+			else:
 				lookup[right] = lookup[left]
 				countries[lookup[left]].append(right)
 				astronaut_count += 1
 				highest_astronaut = max(highest_astronaut, right)
 		else:
+			# Add left to right's country
 			if right in lookup:
 				lookup[left] = lookup[right]
 				countries[lookup[right]].append(left)
 				astronaut_count += 1
 				highest_astronaut = max(highest_astronaut, left)
+
+			# Two new entries - put in same country
 			else:
 				lookup[left] = lookup[right] = cur_country
 				countries[cur_country] = [left, right]
@@ -46,9 +60,14 @@ def solve_naive(num_astronauts, pairs):
 	# Calculate total combinations by adding all unique multiples
 	num_countries = len(countries)
 	combos = 0
-	for i in range(num_countries - 1):
-		for j in range(i + 1, num_countries):
-			combos += (len(countries[i]) * len(countries[j]))
+	keys = list(countries.keys())
+	countries_scratch = dict(countries)
+	for key in keys:
+		source_len = len(countries_scratch[key])
+		del countries_scratch[key]
+		for country in countries_scratch:
+			combos += source_len * len(countries_scratch[country])
+
 
 	for country in countries:
 		print(f"Members of country {country}: {countries[country]}")
