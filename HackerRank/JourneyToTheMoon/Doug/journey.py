@@ -50,7 +50,8 @@ def solve_naive(num_astronauts, pairs):
 		for j in range(i + 1, num_countries):
 			combos += (len(countries[i]) * len(countries[j]))
 
-	print(countries)
+	for country in countries:
+		print(f"Members of country {country}: {countries[country]}")
 
 	return combos
 
@@ -85,4 +86,4 @@ if __name__ == '__main__':
 	elif option == "fast":
 		result = solve_fast(num_astronauts, pairs)
 
-	print(result)
+	print(f"Valid astronaut pairs: {result}")
