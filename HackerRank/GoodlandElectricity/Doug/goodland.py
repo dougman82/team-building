@@ -38,19 +38,26 @@ def solve(distribution, cities):
 	num_powerplants = 0
 	while scan_index < (len(cities)):
 		if cities[scan_index] == 1:
-			num_powerplants += 1
-			last_powerplant = scan_index
+			if scan_index != last_powerplant:
+				num_powerplants += 1
+				last_powerplant = scan_index
+			else:
+				break
 		else:
 			while cities[scan_index] != 1:
 				scan_index -= 1
 			if scan_index != last_powerplant:
 				num_powerplants += 1
-				last_powerplan = scan_index
+				last_powerplant = scan_index
 			else:
 				break
 		
-		print(f"Placing powerplant at index { scan_index }")
-		scan_index += hop_width
+		# print(f"Placing powerplant at index { scan_index }")
+		if (scan_index + hop_width) >= len(cities):
+			scan_index = len(cities) - 1
+		else:
+			scan_index += hop_width
+		# print(f"... new scan index: { scan_index }")
 
 	return num_powerplants
 
