@@ -17,11 +17,11 @@ def is_possible(invalid_end_gap, invalid_middle_gap, cities):
 	return True
 
 
-# Hop through the list (distribution - 1) cities at a time looking to place power plants
-# If suitable spot is not found, hop forward and scan backward as needed
+# Hop through the list (2 * distribution - 1) cities at a time looking to place power plants
+# If suitable spot is not found, scan backward as needed
 def solve(distribution, cities):
 
-	# First check if solution exists, return -1 if no
+	# First check if solution exists, return -1 if none
 	invalid_end_gap = distribution
 	invalid_middle_gap = (2 * distribution) - 1
 	if not is_possible(invalid_end_gap, invalid_middle_gap, cities):
@@ -31,6 +31,7 @@ def solve(distribution, cities):
 	if distribution == 1:
 		return len(cities)
 
+	# Main logic loop
 	scan_index = distribution - 1
 	hop_width = (2 * distribution) - 1
 	last_powerplant = -1
